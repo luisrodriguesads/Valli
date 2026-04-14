@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta Valli × MLX Mind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --gold: #c9a84c;
+    --gold-light: #e8c97e;
+    --gold-dim: rgba(201,168,76,0.15);
+    --white: #f0ede8;
+    --muted: #6b6b7a;
+    --accent: #3F005C;
+    --accent-glow: rgba(63,0,92,0.4);
+    --red: #e05a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 200px;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 100px;
+    margin-bottom: 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 7vw, 90px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 800px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    margin-top: 24px;
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .divider-line {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin: 48px auto 0;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  /* ── SECTION ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 80px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+
+  /* ── PLANS GRID ── */
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .plans-grid { grid-template-columns: 1fr; }
+  }
+
+  .plan-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .plan-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201,168,76,0.25);
+  }
+
+  .plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .plan-card:hover::before { opacity: 1; }
+
+  /* Featured plans */
+  .plan-card.featured {
+    border-color: rgba(201,168,76,0.3);
+    background: linear-gradient(145deg, #141420, #111118);
+  }
+
+  .plan-card.featured::before { opacity: 0.6; }
+
+  .plan-card.hero-plan {
+    border-color: var(--gold);
+    background: linear-gradient(145deg, #181420, #110f1a);
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 768px) {
+    .plan-card.hero-plan { grid-column: 1; }
+  }
+
+  .plan-card.hero-plan::before { opacity: 1; }
+
+  .plan-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .tag-standard {
+    background: rgba(255,255,255,0.05);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .tag-highlight {
+    background: rgba(201,168,76,0.12);
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .tag-top {
+    background: linear-gradient(90deg, rgba(201,168,76,0.25), rgba(201,168,76,0.1));
+    color: var(--gold-light);
+    border: 1px solid var(--gold);
+  }
+
+  .plan-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .hero-plan .plan-name { font-size: 34px; }
+
+  .plan-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .plan-features {
+    list-style: none;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero-plan .plan-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .hero-plan .plan-features { grid-template-columns: 1fr; }
+  }
+
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: #c4c0c8;
+    line-height: 1.4;
+  }
+
+  .plan-features li::before {
+    content: '—';
+    color: var(--gold);
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .plan-price-block {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .price-prefix {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .plan-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .hero-plan .plan-price { font-size: 52px; }
+
+  .price-period {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .plan-obs {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 16px;
+  }
+
+  /* ── ANCHOR BLOCK ── */
+  .anchor-block {
+    margin-top: 48px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .anchor-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .anchor-text {
+    font-size: 15px;
+    color: #b0acba;
+    line-height: 1.7;
+  }
+
+  .anchor-text strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ── FLEX SECTION ── */
+  .flex-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 52px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flex-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.04), transparent 60%);
+    pointer-events: none;
+  }
+
+  .flex-section .section-title { margin-bottom: 16px; }
+
+  .flex-section p {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    text-align: center;
+    padding: 100px 24px;
+    position: relative;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.06), transparent 65%);
+    pointer-events: none;
+  }
+
+  .cta-section .section-title {
+    max-width: 600px;
+    margin: 0 auto 16px;
+  }
+
+  .cta-section p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--gold);
+    color: #0a0a0f;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 18px 40px;
+    border-radius: 100px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-btn:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(201,168,76,0.3);
+  }
+
+  .cta-btn svg {
+    width: 18px; height: 18px;
+    transition: transform 0.2s;
+  }
+
+  .cta-btn:hover svg { transform: translateX(4px); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  footer p {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  footer strong { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .plan-card:nth-child(1) { animation-delay: 0.05s; }
+  .plan-card:nth-child(2) { animation-delay: 0.1s; }
+  .plan-card:nth-child(3) { animation-delay: 0.15s; }
+  .plan-card:nth-child(4) { animation-delay: 0.2s; }
+
+  /* ── HORIZONTAL RULE ── */
+  .section-hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Proposta Comercial · Valli</div>
+  <h1 class="hero-title">Uma estrutura de marketing<br>feita para <em>crescer com vocês</em></h1>
+  <p class="hero-sub">Cada operação tem um momento. Estruturamos diferentes formatos para acompanhar o crescimento de vocês.</p>
+  <div class="divider-line"></div>
+</div>
+
+<!-- PLANS -->
+<section>
+  <p class="section-label">Formatos de Parceria</p>
+  <h2 class="section-title">Escolha o formato ideal<br>para a sua operação</h2>
+  <p class="section-sub">Desde a geração de demanda imediata até uma estrutura completa de captação e escala.</p>
+
+  <div class="plans-grid">
+
+    <!-- PLANO 1 -->
+    <div class="plan-card">
+      <span class="plan-tag tag-standard">Plano 01</span>
+      <h3 class="plan-name">Tráfego Pago</h3>
+      <p class="plan-desc">Para quem quer gerar demanda imediata</p>
+      <ul class="plan-features">
+        <li>Gestão de campanhas no Meta Ads</li>
+        <li>Criação de criativos</li>
+        <li>Segmentação estratégica</li>
+        <li>Otimização contínua</li>
+        <li>Geração de leads via WhatsApp ou formulário</li>
+      </ul>
+      <div class="plan-price-block">
+        <span class="price-prefix">R$</span>
+        <span class="plan-price">497</span>
+        <span class="price-period">/mês</span>
+      </div>
+      <p class="plan-obs">Ideal para validar e começar a gerar oportunidades rapidamente.</p>
+    </div>
+
+    <!-- PLANO 2 -->
+    <div class="plan-card">
+      <span class="plan-tag tag-standard">Plano 02</span>
+      <h3 class="plan-name">Social Media</h3>
+      <p class="plan-desc">Para quem quer construir autoridade e presença</p>
+      <ul class="plan-features">
+        <li>Planejamento de conteúdo</li>
+        <li>Criação de posts (feed + stories)</li>
+        <li>Posicionamento estratégico</li>
+        <li>Organização do perfil</li>
+        <li>Conteúdo voltado para conversão</li>
+      </ul>
+      <div class="plan-price-block">
+        <span class="price-prefix">R$</span>
+        <span class="plan-price">497</span>
+        <span class="price-period">/mês</span>
+      </div>
+      <p class="plan-obs">Foco em construção de marca e confiança no público.</p>
+    </div>
+
+    <!-- PLANO 3 -->
+    <div class="plan-card featured">
+      <span class="plan-tag tag-highlight">🔥 Plano 03 · Mais popular</span>
+      <h3 class="plan-name">Tráfego + Social Media</h3>
+      <p class="plan-desc">Para quem quer crescer com consistência</p>
+      <ul class="plan-features">
+        <li>Tudo do Tráfego Pago</li>
+        <li>Tudo do Social Media</li>
+        <li>Estratégia integrada</li>
+        <li>Melhor aproveitamento dos leads</li>
+        <li>Crescimento mais acelerado</li>
+      </ul>
+      <div class="plan-price-block">
+        <span class="price-prefix">R$</span>
+        <span class="plan-price">897</span>
+        <span class="price-period">/mês</span>
+      </div>
+      <p class="plan-obs">Aqui começa uma estrutura real de crescimento.</p>
+    </div>
+
+    <!-- PLANO 4 — HERO PLAN -->
+    <div class="plan-card hero-plan">
+      <span class="plan-tag tag-top">🚀 Plano 04 · Recomendado</span>
+      <h3 class="plan-name">Estrutura Completa</h3>
+      <p class="plan-desc">Para quem quer previsibilidade e escala — o modelo ideal para transformar a operação em uma máquina de geração de clientes.</p>
+      <ul class="plan-features">
+        <li>Tráfego pago (Meta Ads)</li>
+        <li>Social media completo</li>
+        <li>Landing page profissional</li>
+        <li>Estrutura completa de captação</li>
+        <li>Integração com WhatsApp</li>
+        <li>Estratégia focada em conversão</li>
+      </ul>
+      <div class="plan-price-block">
+        <span class="price-prefix">R$</span>
+        <span class="plan-price">1.297</span>
+        <span class="price-period">/mês</span>
+      </div>
+      <p class="plan-obs">Esse é o modelo ideal para transformar a operação em uma máquina de geração de clientes.</p>
+    </div>
+
+  </div>
+
+  <!-- ANCORAGEM -->
+  <div class="anchor-block">
+    <span class="anchor-icon">💡</span>
+    <p class="anchor-text">Se fossem contratar cada serviço separadamente, o investimento ultrapassaria facilmente <strong>R$ 2.000/mês</strong>. Aqui, a proposta é entregar tudo de forma estruturada e acessível, focando no crescimento real da operação.</p>
+  </div>
+</section>
+
+<hr class="section-hr">
+
+<!-- FLEXIBILIDADE -->
+<section>
+  <div class="flex-section">
+    <p class="section-label">Flexibilidade</p>
+    <h2 class="section-title">Podemos ajustar conforme<br>a necessidade</h2>
+    <p>A estrutura pode ser adaptada de acordo com o momento da operação de vocês. Se a ideia for começar menor e evoluir, também conseguimos montar um plano progressivo.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <p class="section-label">Próximo passo</p>
+  <h2 class="section-title section-title" style="max-width:600px;margin:0 auto 16px;">Se fizer sentido, podemos<br>alinhar <em style="font-style:italic;color:var(--gold)">rapidamente</em></h2>
+  <p>Vamos definir juntos o melhor formato para vocês iniciarem e estruturar o crescimento da operação.</p>
+  <a href="https://wa.me/5516999999999?text=Oi%2C%20vi%20a%20proposta%20e%20quero%20agendar%20uma%20conversa" target="_blank" class="cta-btn">
+    Agendar conversa
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </a>
+</div>
+
+<footer>
+  <p><strong>MLX Mind</strong> · Marketing Experience · Ribeirão Preto, SP</p>
+</footer>
+
+</body>
+</html>
